@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/ML_project.iml" filepath="$PROJECT_DIR$/.idea/ML_project.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../fastai-v3/.idea/fastai-v3.iml" filepath="$PROJECT_DIR$/../fastai-v3/.idea/fastai-v3.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../wingr/.idea/wingr.iml" filepath="$PROJECT_DIR$/../wingr/.idea/wingr.iml" />
+    </modules>
+  </component>
+</project>
