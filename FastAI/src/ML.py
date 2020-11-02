@@ -1,7 +1,7 @@
 from fastai.vision import *
 import numpy as np # linear algebra
 import pandas as pd
-from utils import ROOT_DIR
+from FastAI.utils import ROOT_DIR
 from matplotlib import pyplot as pl
 import matplotlib.image as mpimg
 from PIL import Image
