@@ -15,7 +15,6 @@ def copy_files(PATH, NEWPATH, AMOUNT):
 test_balance = 50
 train_balance = 200
 
-# This is to balance out the 16 validation by taking from test and train.
 target_path = "/content/chest_xray/val/"
 train_path = "/content/chest_xray/train/"
 test_path = "/content/chest_xray/test/"
@@ -25,6 +24,6 @@ copy_files(train_path + "PNEUMONIA/", target_path + "PNEUMONIA/", 100)
 copy_files(test_path + "NORMAL/", target_path + "NORMAL/", 50)
 copy_files(test_path + "PNEUMONIA/", target_path + "PNEUMONIA/", 50)
 
-
+### KNN
 
 Looking into k-nearest neighbours. Probably going with pyTorch wothout fastai, as fastai does not have a knn model. 
