@@ -38,13 +38,14 @@ def make_and_train():
 
     #learn.fit_one_cycle(6, lr, moms=(0.8, 0.7))  # moms
     learn.load(ROOT_DIR + "\\models\\tmp")
-    """
+
     interp = ClassificationInterpretation.from_learner(learn)
+    interp.learn.metrics()
     interp.plot_top_losses(9, figsize=(20, 8))
     interp.most_confused(min_val=3)
     interp.plot_confusion_matrix()
     #interp.losses.view(5)
-    """
+
     plt.show()
     test_net(learn)
     #make_pred(learn, ROOT_DIR + '\\own_images\\robin_6.jpg')
