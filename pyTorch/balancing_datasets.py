@@ -1,5 +1,5 @@
 import os
-from Scikit.utils import ROOT_DIR
+from pyTorch.utils import ROOT_DIR
 
 
 def copy_files(PATH, NEWPATH, AMOUNT):

@@ -9,7 +9,7 @@ from torchvision import transforms, datasets
 import torchvision
 import numpy as np
 import torchvision.models as models
-from Scikit.utils import ROOT_DIR
+from pyTorch.utils import ROOT_DIR
 dataset_root = ROOT_DIR + '\\chest_xray\\'
 batch_size = 128
 new_size = (224,224)
