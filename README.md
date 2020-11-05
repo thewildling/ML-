@@ -30,3 +30,5 @@ I have now balanced the test, train and validation sets, that will be used for t
 ### KNN
 
 Looking into k-nearest neighbours. Probably going with pyTorch wothout fastai, as fastai does not have a knn model. 
+#### 05.11.20
+I have made a working KNN-model, that gets an accuracy of 79 % with k = 2. Its under pyTorch folder 
