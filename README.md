@@ -25,10 +25,10 @@ copy_files(test_path + "NORMAL/", target_path + "NORMAL/", 50)
 copy_files(test_path + "PNEUMONIA/", target_path + "PNEUMONIA/", 50)
 
 #### 04.11.20
-I have now balanced the test, train and validation sets, that will be used for the KNN model, using the code-snippet provided above. The reason is to get a bigger validation set, as the one provided from kaggle only has 8 images in it. It now has over 150 images, making validation and accuracy more complete. 
+The test, train and validation sets have now been balanced. These new sets will be used for the KNN model, by using the code-snippet provided above. The reason is to get a bigger validation set, as the one provided from Kaggle.com only had 8 images in it. It now has over 150 images, making validation and accuracy more complete. 
 
 ### KNN
 
-Looking into k-nearest neighbours. Probably going with pyTorch wothout fastai, as fastai does not have a knn model. 
+Looking into K-Nearest Neighbours. Probably going with PyTorch without FastAI, as FastAI does not have a KNN model. 
 #### 05.11.20
-I have made a working KNN-model, that gets an accuracy of 79 % with k = 2. Its under pyTorch folder 
+A working KNN-model have been made, which reaches an accuracy of 79 % with k = 2. The code for this is under the pyTorch-folder.
