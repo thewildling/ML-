@@ -5,6 +5,7 @@ from FastAI.utils import ROOT_DIR
 from matplotlib import pyplot as pl
 import matplotlib.image as mpimg
 from PIL import Image
+from torchvision import transforms
 
 def make_pred(learn, file):
     file = file
@@ -16,8 +17,7 @@ def make_pred(learn, file):
 def make_and_train():
     path = Path(ROOT_DIR + '\\consolidated\\')
 
-
-    data = ImageDataBunch.from_folder(path, train='.', valid_pct=0.20, ds_tfms=get_transforms(), size=224,
+    data = ImageDataBunch.from_folder(path, train='.', valid_pct=0.20, ds_tfms=transforms.Grayscale, size=224,
                                       num_workers=4).normalize(imagenet_stats)
     # valid size here its 20% of total images,
     # train = train folder here we use all the folder
