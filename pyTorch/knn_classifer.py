@@ -1,3 +1,5 @@
+import pickle
+
 import torch
 import torch.nn as nn
 import torch.nn.init as init
@@ -9,18 +11,27 @@ from torchvision import transforms, datasets
 import torchvision
 import numpy as np
 import torchvision.models as models
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import *
+import matplotlib.pyplot as plt
+import scikitplot as skplt
+from joblib import dump
+from sklearn.metrics import plot_confusion_matrix
+
+import wandb
 from pyTorch.utils import ROOT_DIR
 dataset_root = ROOT_DIR + '\\chest_xray\\'
 batch_size = 128
 new_size = (224,224)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+labels = ['NORMAL', 'PNEUMONIA']
+
 def dataset(): # Take in the datasets from folders, and make them into tensors, so they can be used for training.
-    transform = transforms.Compose([
-        transforms.Grayscale(), # Since the images are blanc/white
+    transform = transforms.Compose([ # Since the images are blanc/white
         transforms.Resize(new_size),
+        transforms.Grayscale(),
         transforms.ToTensor(),
-        transforms.Normalize((0.5,), (0.5,)),
         nn.Flatten()
     ])
 
@@ -54,6 +65,12 @@ def dataset(): # Take in the datasets from folders, and make them into tensors, 
     y_test = torch.tensor(y_test, device=device)
     x_train = torch.tensor(x_train, device=device)
     y_train = torch.tensor(y_train, device=device)
+    x_test = x_test.cpu().data.numpy()
+    y_test = y_test.cpu().data.numpy()
+    x_train = x_train.cpu().data.numpy()
+    y_train = y_train.cpu().data.numpy()
+    print(x_train.shape)
+
     return x_train, y_train, x_test, y_test
 
 
@@ -82,26 +99,118 @@ def KNN_model(x_train, y_train, x_test, neighbours, device, log_boolean, log = 1
 
     return y_test
 
+
+def train():
+
+    x_train, y_train, x_test, y_test = dataset()
+
+    print("train and test sizes are: %s, %s" % (str(x_train.shape), str(x_test.shape)))
+
+    #pred = KNN_model(x_train, y_train, x_test, neighbours=1, device = device)
+    #correct = pred.eq(y_test.to(device).view_as(pred)).sum()
+    #print("Correct pred %d/%d, Accuracy %f" % (correct, y_test.shape[0], 100. * correct/y_test.shape[0]))
+
+
+    k_values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 25, 37, 49, int(np.floor(np.sqrt(x_train.shape[0]))), 200]
+
+    correct_vals = []
+
+    best_k = -1
+    best_correct = 0
+
+    for k in k_values:
+        pred = KNN_model(x_train, y_train, x_test, neighbours=k, device=device, log_boolean=False)
+        correct = pred.eq(y_test.view_as(pred)).sum()
+        print("K = %d, Correct: %d, Accuracy: %.2f" % (k, correct, 100. * correct / y_test.shape[0]))
+
+
 x_train, y_train, x_test, y_test = dataset()
 
-print("train and test sizes are: %s, %s" % (str(x_train.shape), str(x_test.shape)))
-
-#pred = KNN_model(x_train, y_train, x_test, neighbours=1, device = device)
-#correct = pred.eq(y_test.to(device).view_as(pred)).sum()
-#print("Correct pred %d/%d, Accuracy %f" % (correct, y_test.shape[0], 100. * correct/y_test.shape[0]))
 
 
-k_values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 25, 37, 49, int(np.floor(np.sqrt(x_train.shape[0]))), 200]
 
-correct_vals = []
+def save_model(classifer):
+    filename = 'finalized_model.sav'
+    pickle.dump(classifer, open(filename, 'wb'))
 
-best_k = -1
-best_correct = 0
+"""
+# Visualising the Training set results
+from matplotlib.colors import ListedColormap
+X_set, y_set = x_train, y_train
+X1, X2 = np.meshgrid(np.arange(start = X_set[:, 0].min() - 1, stop = X_set[:, 0].max() + 1, step = 0.01),
+                     np.arange(start = X_set[:, 1].min() - 1, stop = X_set[:, 1].max() + 1, step = 0.01))
+plt.contourf(X1, X2, classifer.predict(np.array([X1.ravel(), X2.ravel()]).T).reshape(X1.shape),
+             alpha = 0.75, cmap = ListedColormap(('red', 'green')))
+plt.xlim(X1.min(), X1.max())
+plt.ylim(X2.min(), X2.max())
+for i, j in enumerate(np.unique(y_set)):
+    plt.scatter(X_set[y_set == j, 0], X_set[y_set == j, 1],
+                c = ListedColormap(('red', 'green'))(i), label = j)
+plt.title('Classifier (Training set)')
+plt.xlabel('Age')
+plt.ylabel('Estimated Salary')
+plt.legend()
+plt.show()
+"""
+def load_model():
+    return pickle.load(open('model.sav', 'rb'))
 
-for k in k_values:
-    pred = KNN_model(x_train, y_train, x_test, neighbours=k, device=device, log_boolean=False)
-    correct = pred.eq(y_test.view_as(pred)).sum()
-    print("K = %d, Correct: %d, Accuracy: %.2f" % (k, correct, 100. * correct / y_test.shape[0]))
+
+def plot_best_K():
+    error = []
+
+    # Calculating error for K values between 1 and 40
+    for i in range(1, 20):
+        print(i)
+        knn = KNeighborsClassifier(n_neighbors=i)
+        knn.fit(x_train, y_train)
+        pred_i = knn.predict(x_test)
+        error.append(np.mean(pred_i != y_test))
+
+    plt.figure(figsize=(12, 6))
+    plt.plot(range(1, 20), error, color='red', linestyle='dashed', marker='o',
+             markerfacecolor='blue', markersize=10)
+    plt.title('Error Rate K Value')
+    plt.xlabel('K Value')
+    plt.ylabel('Mean Error')
+
+    plt.show()
+
+"""
+from PIL import Image
+img = Image.open(ROOT_DIR + '\\chest_xray\\test\\NORMAL\\IM-0083-0001.jpeg')
+
+img = np.array(img).reshape(1, -1)
+img = torch.tensor(img, device='cpu')
+img = img.cpu().data.numpy()
+model = load_model()
+model.predict(img)
+"""
+y_true = []
+for num in y_test:
+    y_true.append(labels[num])
+
+classifier = KNeighborsClassifier(n_neighbors=2)
+classifier.fit(x_train, y_train)
+pred = classifier.predict(x_test)
+
+plot_confusion_matrix(classifier, x_test, y_test, )
+plt.show()
+"""
+from PIL import Image
+img = Image.open(ROOT_DIR + '\\chest_xray\\test\\NORMAL\\IM-0083-0001.jpeg')
+img = img.resize((224,224), Image.ANTIALIAS)
+img = np.array(img)
+img = img.reshape(1, 50176)
+
+print(img)
+print(classifier.predict(img))
+print(labels[classifier.predict(img)[0]])
+"""
+#print(f1_score(y_test, pred))
+
+
+
 
 
 

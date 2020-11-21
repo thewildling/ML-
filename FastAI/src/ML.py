@@ -16,14 +16,45 @@ def make_pred(learn, file):
 def make_and_train():
     path = Path(ROOT_DIR + '\\consolidated\\')
 
-    tfms = get_transforms(do_flip=True, max_lighting=0.1, max_rotate=0.1)
 
-    data = ImageDataBunch.from_folder(path, train='.', valid_pct=0.15, ds_tfms=tfms, size=196,
+    data = ImageDataBunch.from_folder(path, train='.', valid_pct=0.20, ds_tfms=get_transforms(), size=224,
                                       num_workers=4).normalize(imagenet_stats)
-    # valid size here its 15% of total images,
+    # valid size here its 20% of total images,
     # train = train folder here we use all the folder
+    fb = FBeta()
+    fb.average = 'macro'
 
     print(data)
+    learn = cnn_learner(data, models.resnet50, metrics=[accuracy, fb], model_dir=ROOT_DIR + '\\models\\', path=Path('.'), pretrained=True)
+    learn.lr_find()
+    learn.recorder.plot(suggestion=True)
+
+    lr1 = 1e-3
+    lr2 = 1e-1
+    learn.fit_one_cycle(4, slice(lr1, lr2))
+
+    # lr1 = 1e-3
+    lr = 1e-1
+    learn.fit_one_cycle(20, slice(lr))
+
+    learn.unfreeze()
+    learn.lr_find()
+    learn.recorder.plot(suggestion=True)
+    learn.fit_one_cycle(10, slice(1e-4, 1e-3))
+
+    learn.recorder.plot_losses()
+
+    interp = ClassificationInterpretation.from_learner(learn)
+    interp.plot_top_losses(9, figsize=(20, 8))
+    interp.most_confused(min_val=3)
+    interp.plot_confusion_matrix()
+    plt.show()
+
+
+    #learn.export()
+    #learn.save()
+
+    """
     data.show_batch(rows=3)
     plt.show()
     fb = FBeta()
@@ -36,23 +67,10 @@ def make_and_train():
 
     lr = 1e-2  # learning rate
 
-    #learn.fit_one_cycle(6, lr, moms=(0.8, 0.7))  # moms
+    learn.fit_one_cycle(6, lr, moms=(0.8, 0.7))  # moms
     learn.load(ROOT_DIR + "\\models\\tmp")
+    """
 
-    interp = ClassificationInterpretation.from_learner(learn)
-    interp.learn.metrics()
-    interp.plot_top_losses(9, figsize=(20, 8))
-    interp.most_confused(min_val=3)
-    interp.plot_confusion_matrix()
-    #interp.losses.view(5)
-
-    plt.show()
-    test_net(learn)
-    #make_pred(learn, ROOT_DIR + '\\own_images\\robin_6.jpg')
-
-    # make_pred(learn, ROOT_DIR + '\\valid\\ANTBIRD\\2.jpg')
-    #learn.export()
-    #learn.save()
 
 def test_net(learn):
     img = ROOT_DIR + '\\consolidated\\NORMAL\\IM-0001-0001.jpeg'
@@ -92,15 +110,26 @@ def interp():
     interp.most_confused(min_val=3)
 
     plt.show()
-    make_pred(learn, ROOT_DIR + '\\own_images\\robin_6.jpg')
 
-    make_pred(learn, ROOT_DIR + '\\valid\\ANTBIRD\\2.jpg')
+
+def load_model():
+    path = Path(ROOT_DIR + '\\consolidated\\')
+
+    np.random.seed(40)
+
+    data = ImageDataBunch.from_folder(path, train='.', valid_pct=0.20, ds_tfms=get_transforms(), size=224,
+                                      num_workers=4).normalize(imagenet_stats)
+
+    learn = cnn_learner(data, models.resnet50, metrics=[accuracy], model_dir=ROOT_DIR + '\\models\\', path=Path('.'))
+    learn.load(ROOT_DIR + '\\models\\tmp')
+    return learn
 
 
 if __name__ == '__main__':
     # valid size here its 15% of total images,
-    make_and_train()
     # train = train folder here we use all the folder
+    make_and_train()
+
 
     # print(data)
     # data.show_batch(rows=3)
