@@ -35,7 +35,7 @@ def dataset(): # Take in the datasets from folders, and make them into tensors, 
         nn.Flatten()
     ])
 
-    train = torchvision.datasets.ImageFolder(root=dataset_root + 'train', transform=transform)
+    train = torchvision.datasets.ImageFolder(root=dataset_root + 'train_balanced', transform=transform)
 
     test = torchvision.datasets.ImageFolder(root=dataset_root + 'test', transform=transform)
 
@@ -56,7 +56,7 @@ def dataset(): # Take in the datasets from folders, and make them into tensors, 
         y_val = target.squeeze()
 
     x_test = []
-    y_test =[]
+    y_test = []
     for idx, (data_in_test, target) in enumerate(test_loader):
         x_test = data_in_test.squeeze()
         y_test = target.squeeze()
@@ -173,7 +173,7 @@ def plot_best_K():
     for i in range(1, 20):
         print(i)
         knn = KNeighborsClassifier(n_neighbors=i)
-        knn.fit(x_val, y_val)
+        knn.fit(x_train, y_train)
         pred_i = knn.predict(x_test)
         error.append(np.mean(pred_i != y_test))
 
@@ -186,6 +186,7 @@ def plot_best_K():
 
     plt.show()
 
+
 classifier = KNeighborsClassifier(n_neighbors=12)
 classifier.fit(x_train, y_train)
 y_pred = classifier.predict(x_test)
@@ -193,11 +194,6 @@ y_pred = classifier.predict(x_test)
 print(accuracy_score(y_test, y_pred))
 print(classification_report(y_test, y_pred))
 print(confusion_matrix(y_test, y_pred))
-
-
-
-
-
 
 
 """
@@ -232,6 +228,7 @@ print(classifier.predict(img))
 print(labels[classifier.predict(img)[0]])
 """
 #print(f1_score(y_test, pred))
+
 
 
 

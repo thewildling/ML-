@@ -17,30 +17,37 @@ def make_pred(learn, file):
 def make_and_train():
     path = Path(ROOT_DIR + '\\consolidated\\')
 
-    data = ImageDataBunch.from_folder(path, train='.', valid_pct=0.20, ds_tfms=transforms.Grayscale, size=224,
+
+    data = ImageDataBunch.from_folder(path, train='.', valid_pct=0.20, ds_tfms=get_transforms(), size=224,
                                       num_workers=4).normalize(imagenet_stats)
-    # valid size here its 20% of total images,
-    # train = train folder here we use all the folder
+    # valid_pct: chosing to create the validation folder of 20% of the images
+    # train = train folder
+    # setting size of image to 224*224 pixels
+    # Normalizing the data set
     fb = FBeta()
     fb.average = 'macro'
-
     print(data)
-    learn = cnn_learner(data, models.resnet50, metrics=[accuracy, fb], model_dir=ROOT_DIR + '\\models\\', path=Path('.'), pretrained=True)
+    learn = cnn_learner(data, models.resnet50, metrics=[accuracy, fb], model_dir=ROOT_DIR + '\\models\\', path=Path('.'))
     learn.lr_find()
     learn.recorder.plot(suggestion=True)
+    plt.show()
 
-    lr1 = 1e-3
-    lr2 = 1e-1
+    lr1 = 1e-3 #initial guess
+    lr2 = 1e-1 #intial guess
     learn.fit_one_cycle(4, slice(lr1, lr2))
-
+    lr = learn.lr_find()
+    learn.recorder.plot(suggestion=True)
+    plt.show()
     # lr1 = 1e-3
-    lr = 1e-1
+
     learn.fit_one_cycle(20, slice(lr))
 
     learn.unfreeze()
-    learn.lr_find()
+    lr = learn.lr_find()
     learn.recorder.plot(suggestion=True)
-    learn.fit_one_cycle(10, slice(1e-4, 1e-3))
+    plt.show()
+
+    learn.fit_one_cycle(10, slice(lr))
 
     learn.recorder.plot_losses()
 
