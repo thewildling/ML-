@@ -1,4 +1,4 @@
-# Managing data for CM4Smart :floppy_disk:
+# Comparison of KNN to ResNet50 for pneumonia detection in X-rays:floppy_disk:
 
 This project looks at comparing ResNet50 and KNN for classifying X-rays of pneumonia. 
 
