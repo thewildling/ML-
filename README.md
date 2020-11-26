@@ -1,7 +1,6 @@
 # Managing data for CM4Smart :floppy_disk:
 
-These python files are used to organize and format the data given by the machines in the CM¤Smart project. 
-It uses several .py files, containing several methods to do this.
+This project looks at comparing ResNet50 and KNN for classifying X-rays of pneumonia. 
 
 ## Projectstructure :clipboard:
 
@@ -12,21 +11,13 @@ It uses several .py files, containing several methods to do this.
 ## Getting Started :checkered_flag:
 
 To get started, download this repo either by cloning it from your IDE, or download it as a zip. 
-There is several py-files in the repo, but everything you need to do, is located in analyseData.py. Here you
-can find the majority og the methods used for structuring data. All running of the methods is also done here.
+The majority of methods can be found in ML.py and KNN_classifier.py.
 
-All the pkl-files needed to make dataframes for ML-training and testing is already generated in this repo, 
-for the M1, M3, M58, M93. If you should need to generate the files again, this can be done(see running the system). 
-As it uses a os-module to find root-folder, No new path should need to be changed. 
+The images used for training, should be put in the respective folders described in the readme-files found in the data folders.
 
 ## Running the system :rocket:
 
-All methodcalls are done at the bottom of the analyseData-file. The sort and sort_on_order is set to false from the start. 
-If you change the 4 false in each to true, you generate the files found in the orders folder. To do this, you
-should delete all files and folders in the orders-folder. These are the sensor-readings
-structured properly, and either is sorted on date or on order-nr. The full 6M files are located under 
-pickle_data->orders->machine-nr->at the bottom. The ones ordered on orders, are located in the same folder, but under the 
-respective order-nr-folder. 
+Both of the main py-files contain a main method at the bottom of the files, and can be run as is. 
 
 
 ### Example of running system
