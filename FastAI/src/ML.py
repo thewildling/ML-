@@ -40,19 +40,19 @@ def make_and_train(): # The main function for the ResNet50 model. It makes the d
     lr1 = 1e-3 #LR after 2 epochs
     lr2 = 1e-1 #Lr after 2 epochs
     learn.fit_one_cycle(4, slice(lr1, lr2))
-    lr = learn.lr_find()
+    learn.lr_find()
     learn.recorder.plot(suggestion=True)
     plt.show()
     # lr1 = 1e-3
 
-    learn.fit_one_cycle(20, slice(lr))
+    learn.fit_one_cycle(20, 1e-3)
 
     learn.unfreeze()
-    lr = learn.lr_find()
+    learn.lr_find()
     learn.recorder.plot(suggestion=True)
     plt.show()
 
-    learn.fit_one_cycle(10, slice(lr))
+    learn.fit_one_cycle(10, 1e-4)
 
     learn.recorder.plot_losses()
 

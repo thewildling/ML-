@@ -148,25 +148,6 @@ def save_model(classifer): # method for saving the model, so it doesnt need to b
     filename = 'finalized_model.sav'
     pickle.dump(classifer, open(filename, 'wb'))
 
-"""
-# Visualising the Training set results
-from matplotlib.colors import ListedColormap
-X_set, y_set = x_train, y_train
-X1, X2 = np.meshgrid(np.arange(start = X_set[:, 0].min() - 1, stop = X_set[:, 0].max() + 1, step = 0.01),
-                     np.arange(start = X_set[:, 1].min() - 1, stop = X_set[:, 1].max() + 1, step = 0.01))
-plt.contourf(X1, X2, classifer.predict(np.array([X1.ravel(), X2.ravel()]).T).reshape(X1.shape),
-             alpha = 0.75, cmap = ListedColormap(('red', 'green')))
-plt.xlim(X1.min(), X1.max())
-plt.ylim(X2.min(), X2.max())
-for i, j in enumerate(np.unique(y_set)):
-    plt.scatter(X_set[y_set == j, 0], X_set[y_set == j, 1],
-                c = ListedColormap(('red', 'green'))(i), label = j)
-plt.title('Classifier (Training set)')
-plt.xlabel('Age')
-plt.ylabel('Estimated Salary')
-plt.legend()
-plt.show()
-"""
 def load_model(): # Method for loading a saved model back for use.
     return pickle.load(open('model.sav', 'rb'))
 
@@ -195,52 +176,17 @@ def plot_best_K(): # A method used for showcasing the best K-value for the KNN-m
 
 if __name__ == '__main__': # main func
 
-    classifier = KNeighborsClassifier(n_neighbors=12)
-    classifier.fit(x_train, y_train)
-    y_pred = classifier.predict(x_test)
+    classifier = KNeighborsClassifier(n_neighbors=12) #Creating the KNN-model with K=12
+    classifier.fit(x_train, y_train) # training the model with the train data, features and labels
+    y_pred = classifier.predict(x_test) # predicting with the model on the test features.
 
+    #printing accuracy, and a report showing different metrics, as well as the confusion matrix.
     print(accuracy_score(y_test, y_pred))
     print(classification_report(y_test, y_pred))
     print(confusion_matrix(y_test, y_pred))
 
 
 
-
-
-
-
-"""
-from PIL import Image
-img = Image.open(ROOT_DIR + '\\chest_xray\\test\\NORMAL\\IM-0083-0001.jpeg')
-
-img = np.array(img).reshape(1, -1)
-img = torch.tensor(img, device='cpu')
-img = img.cpu().data.numpy()
-model = load_model()
-model.predict(img)
-
-y_true = []
-for num in y_test:
-    y_true.append(labels[num])
-
-classifier = KNeighborsClassifier(n_neighbors=2)
-classifier.fit(x_train, y_train)
-pred = classifier.predict(x_test)
-
-plot_confusion_matrix(classifier, x_test, y_test, )
-plt.show()
-
-from PIL import Image
-img = Image.open(ROOT_DIR + '\\chest_xray\\test\\NORMAL\\IM-0083-0001.jpeg')
-img = img.resize((224,224), Image.ANTIALIAS)
-img = np.array(img)
-img = img.reshape(1, 50176)
-
-print(img)
-print(classifier.predict(img))
-print(labels[classifier.predict(img)[0]])
-"""
-#print(f1_score(y_test, pred))
 
 
 
