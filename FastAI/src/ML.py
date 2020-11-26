@@ -37,9 +37,8 @@ def make_and_train(): # The main function for the ResNet50 model. It makes the d
     learn.recorder.plot(suggestion=True) # plotting it with suggestion of best.
     plt.show()
 
-    lr1 = 1e-3 #LR after 2 epochs
-    lr2 = 1e-1 #Lr after 2 epochs
-    learn.fit_one_cycle(4, slice(lr1, lr2))
+
+    learn.fit_one_cycle(4, 1e-3)
     learn.lr_find()
     learn.recorder.plot(suggestion=True)
     plt.show()
