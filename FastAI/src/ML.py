@@ -38,7 +38,7 @@ def make_and_train(): # The main function for the ResNet50 model. It makes the d
     plt.show()
 
 
-    learn.fit_one_cycle(4, 1e-3)
+    learn.fit_one_cycle(4, 1e-2)
     learn.lr_find()
     learn.recorder.plot(suggestion=True)
     plt.show()
