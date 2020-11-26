@@ -56,26 +56,21 @@ plots a graph showing what the best K-value is for the model.
 ## Prerequisites :white_check_mark:
 -------------------
 
-
--pandas-profiling(need to download with conda)
-
-numpy==1.18.5
-
-pandas == 1.1.1
-
-seaborn == 0.10.1
-
-matplotlib == 3.3.1
-
-
--for installing fastai:
-
-conda install fastai pytorch=1.0.0 -c fastai -c pytorch -c conda-forge
- 
--for installing pandas-profiling:
-
-conda install -c conda-forge pandas-profiling
+from fastai.vision import *
+import numpy as np 
+import pickle
+import torch
+import torch.nn as nn
+from torch.utils.data import Dataset
+from torchvision import transforms, datasets
+import torchvision
+import numpy as np
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import *
+import matplotlib.pyplot as plt
 
 ## Authors :pencil2:
 
-Anders Fredriksen and Fridtjof Høyer 
+Anders Fredriksen
+Marianne Pettersen
+Elise Bø
