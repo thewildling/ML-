@@ -5,7 +5,7 @@ It uses several .py files, containing several methods to do this.
 
 ## Projectstructure :clipboard:
 
-![alt text](https://github.com/anderf2706/CM4Smart/blob/master/docs/img/CM4Smart%20PS%20.png)
+![alt text](https://github.com/anderf2706/ML-/blob/main/Images/structure.png)
 
 **Structure**
 
