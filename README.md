@@ -1,6 +1,6 @@
 # Comparison of KNN to ResNet50 for pneumonia detection in X-rays:floppy_disk:
 
-This project looks at comparing the machine learning methods Residual Neural Network (ResNet50) and K-Nearest Neighbours (KNN) for classifying real patient X-rays of pneumonia. 
+This project looks at comparing the machine learning methods Residual Neural Network (ResNet50) and K-Nearest Neighbours (KNN) for classifying real patient X-rays of pneumonia. Some information about our project as well as the finished model (which can be tested by uploading an image of an X-ray) can be found on the website: ml.andersf.no.
 
 ## Projectstructure :clipboard:
 
